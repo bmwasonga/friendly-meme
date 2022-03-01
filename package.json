@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "main": "server.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "yarn start --prefix client",
+    "build": "yarn run server && yarn run client",
+    "migrate": "yarn run build && node_modules/.bin/sequelize db:migrate"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
