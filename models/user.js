@@ -13,12 +13,33 @@ module.exports = (sequelize, DataTypes) => {
   }
   user.init(
     {
-      phone: DataTypes.STRING,
-      password: DataTypes.STRING,
-      role: DataTypes.STRING,
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          is: /^\+?[0-9]{10,15}$/,
+          notEmpty: { msg: 'Phone number is required' },
+          notNull: { msg: 'Phone number is required' },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       sequelize,
+      tableName: 'users',
       modelName: 'user',
     }
   );
