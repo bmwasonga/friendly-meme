@@ -3,9 +3,6 @@ const bcrypt = require('bcrypt');
 
 function initialize(passport, getUserByPhone, getUserById) {
   const authenticateUser = async (phone, password, done) => {
-    //function to ge user by phone
-
-    // const user = await User.findOne({ where: { phone } });
     const user = getUserByPhone(phone);
     if (user == null) {
       return done(null, false, { message: 'No user with that phone number' });

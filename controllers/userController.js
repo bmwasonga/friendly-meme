@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const asyncHandler = require('express-async-handler');
-const { user } = require('../models/user');
+const { User } = require('../models/user');
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, phone, password } = req.body;
+  const { role, phone, password } = req.body;
+  console.log(req.body);
 
-  if (!name || !phone || !password) {
+  if (!role || !phone || !password) {
     return res.status(400).json({
       status: 400,
       message: 'Please provide all required fields',
@@ -14,7 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //check to see if user exists
-  const userExists = await user.findOne({ phone });
+  const userExists = await User.findOne({ phone });
 
   if (userExists) {
     return res.status(400).json({
@@ -31,7 +32,7 @@ const registerUser = asyncHandler(async (req, res) => {
   //create a new user
 
   const newUser = await user.create({
-    name,
+    role,
     phone,
     password: hashedPassword,
   });
@@ -49,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
         token,
         user: {
           id: user.id,
-          name: user.name,
+          role: user.roel,
           phone: user.phone,
         },
       },
@@ -104,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
       token,
       user: {
         id: userExists.id,
-        name: userExists.name,
+        role: userExists.role,
         phone: userExists.phone,
       },
     },

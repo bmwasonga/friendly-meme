@@ -11,6 +11,8 @@ const session = require('express-session');
 const { sequelize, user } = require('../models');
 const PORT = process.env.PORT || 5000;
 
+//include the err middleware
+
 const initializePassport = require('../passport.config');
 
 initializePassport(
@@ -23,8 +25,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.set('view engine', 'ejs');
 app.use(flash());
+app.set('view engine', 'ejs');
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -44,24 +46,7 @@ app.post(
   })
 );
 
-app.post('/register', async (req, res) => {
-  const { phone, password, role } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  try {
-    const response = await user.create({
-      phone,
-      password: hashedPassword,
-      role,
-    });
-    return res.json(response);
-    res.redirect('/login');
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: { error } });
-    res.redirect('/register');
-  }
-});
+app.use('/user', require('../routes/userRoute'));
 
 app.listen(PORT, async () => {
   try {
