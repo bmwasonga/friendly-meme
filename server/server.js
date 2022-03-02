@@ -1,22 +1,50 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
+const express = require('express');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
 const { sequelize, user } = require('../models');
 const PORT = process.env.PORT || 5000;
 
+const initializePassport = require('../passport.config');
+
+initializePassport(
+  passport,
+  (phone) => user.findOne({ where: { phone } }),
+  (id) => user.findById(id)
+);
+
 const app = express();
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
+app.use(flash());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/', (req, res) => {
-  res.render('index');
-});
+app.post(
+  'login',
+  passport.authenticate('local', {
+    successRedirect: '/dash',
+    failureRedirect: '/login',
+    failureFlash: true,
+  })
+);
 
-app.get('/dash', (req, res) => {
-  res.render('dashboard', { user: 'Wasonga' });
-});
-
-app.post('/users', async (req, res) => {
+app.post('/register', async (req, res) => {
   const { phone, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 

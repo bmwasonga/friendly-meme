@@ -1,44 +1,32 @@
-import { useState } from 'react'
-import logo from './logo.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Global/Header';
 import './App.css'
+import Register from './pages/register'
+import Login from './pages/login'
+import Home from './pages/home'
+import { ToastContainer } from 'react-toastify';
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <>
+    <Router>
+      <div className="flex justify-center flex-col align-center mx-auto p-6">
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <h2>Check the obvious routes from the header below</h2>
+        <Header />
+      </div>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Register />} />
+      </Routes>
+    </Router>
+    <ToastContainer />
+  </>
   )
 }
 
