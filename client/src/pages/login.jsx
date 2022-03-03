@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { login, reset } from '../features/auth/authSlice';
 
 const Login = () => {
@@ -10,7 +9,7 @@ const Login = () => {
     password: '',
   });
 
-  const { email, password } = formData;
+  const { phone, password } = formData;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,7 +39,7 @@ const Login = () => {
     e.preventDefault();
 
     const userData = {
-      email,
+      phone,
       password,
     };
     dispatch(login(userData));
@@ -54,11 +53,11 @@ const Login = () => {
         <form onSubmit={onSubmit}>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="email"
-            name="email"
-            id="email"
+            type="text"
+            name="phone"
+            id="phone"
             placeholder="Email"
-            value={email}
+            value={phone}
             onChange={onChange}
           />
           <input

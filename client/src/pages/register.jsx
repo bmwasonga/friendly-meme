@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { register, reset } from '../features/auth/authSlice';
 
 const Register = () => {
@@ -22,11 +21,11 @@ const Register = () => {
   );
 
   useEffect(() => {
-    if (error) toast.error(error);
+    if (error) alert(error);
 
     if (success || user) navigate('/');
 
-    if (message) toast.success(message);
+    if (message) alert(message);
 
     dispatch(reset());
   }, [user, error, success, message, navigate, dispatch]);
