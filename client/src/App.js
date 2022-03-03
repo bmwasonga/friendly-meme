@@ -9,9 +9,7 @@ function App() {
   return (
     <>
       <Router>
-        <div className="flex justify-center flex-col align-center mx-auto p-6">
-          <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          <h2>Check the obvious routes from the header below</h2>
+        <div className="flex justify-center flex-col align-center mx-auto p-4 shadow-lg">
           <Header />
         </div>
 

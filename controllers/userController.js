@@ -38,9 +38,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //create token
   if (newUser) {
-    const token = jwt.sign({ id: User.id }, process.env.JWT_SECRET, {
-      expiresIn: '24h',
-    });
+    const token = jwt.sign(
+      { id: User.id, role: User.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '24h',
+      }
+    );
     return res.status(201).json({
       status: 201,
       message: 'User created successfully',
@@ -94,9 +98,13 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   //create token
-  const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, {
-    expiresIn: '24h',
-  });
+  const token = jwt.sign(
+    { id: userExists.id, role: userExists.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '24h',
+    }
+  );
 
   return res.status(200).json({
     status: 200,
