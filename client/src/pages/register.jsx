@@ -6,12 +6,12 @@ import { register, reset } from '../features/auth/authSlice';
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    phone: '',
     password: '',
     password2: '',
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, phone, password, password2 } = formData;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const Register = () => {
     } else {
       const userData = {
         name,
-        email,
+        phone,
         password,
       };
       console.log('the user data is: ', userData);
@@ -71,11 +71,11 @@ const Register = () => {
           />
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Email"
-            value={email}
+            type="phone"
+            name="phone"
+            id="phone"
+            placeholder="Phone"
+            value={phone}
             onChange={onChange}
           />
           <input

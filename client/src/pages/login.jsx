@@ -56,7 +56,7 @@ const Login = () => {
             type="text"
             name="phone"
             id="phone"
-            placeholder="Email"
+            placeholder="Phone"
             value={phone}
             onChange={onChange}
           />

@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const asyncHandler = require('express-async-handler');
-const { user } = require('../models');
+const { User } = require('../models');
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { phone, password, role } = req.body;
+  const { name, phone, password } = req.body;
 
-  if (!role || !phone || !password) {
+  if (!name || !phone || !password) {
     return res.status(400).json({
       status: 400,
       message: 'Please provide all required fields',
@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //check to see if user exists
-  const userExists = await user.findOne({ where: { phone } });
+  const userExists = await User.findOne({ where: { phone } });
 
   if (userExists) {
     return res.status(400).json({
@@ -22,72 +22,110 @@ const registerUser = asyncHandler(async (req, res) => {
       message: 'User already exists',
     });
   }
-  // Hash password
+
+  //hash password
+
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Create user
-  const newUser = await user.create({
-    role,
+  //create a new user
+
+  const newUser = await User.create({
+    name,
     phone,
     password: hashedPassword,
   });
 
+  //create token
   if (newUser) {
-    res.status(201).json({
-      // newUser,
-      uuid: newUser.uuid,
-      role: newUser.role,
-      token: generateToken(newUser.uuid, newUser.role),
+    const token = jwt.sign({ id: User.id }, process.env.JWT_SECRET, {
+      expiresIn: '24h',
+    });
+    return res.status(201).json({
+      status: 201,
+      message: 'User created successfully',
+      // find out what else is to be in this return that has the token
+      data: {
+        token,
+        user: {
+          id: newUser.id,
+          name: newUser.name,
+          phone: newUser.phone,
+        },
+      },
     });
   } else {
-    res.status(400);
-    throw new Error('Invalid user data');
+    return res.status(400).json({
+      status: 400,
+      message: 'User not created',
+    });
   }
 });
 
+//login user
 const loginUser = asyncHandler(async (req, res) => {
   const { phone, password } = req.body;
 
   if (!phone || !password) {
-    return res.status(400).json({
-      status: 400,
+    return res.status(500).json({
+      status: 500,
       message: 'Please provide all required fields',
     });
   }
 
   //check to see if user exists
-  const userExists = await user.findOne({ where: { phone } });
+  const userExists = await User.findOne({ where: { phone } });
 
   if (!userExists) {
-    return res.status(400).json({
-      status: 400,
+    return res.status(500).json({
+      status: 500,
       message: 'User does not exist',
     });
   }
 
-  if (userExists && (await bcrypt.compare(password, userExists.password))) {
-    res.status(200).json({
-      uuid: userExists.uuid,
-      role: userExists.role,
-      token: generateToken(userExists.uuid, userExists.role),
-    });
-  } else {
-    res.status(400).json({
+  //check password
+  const isMatch = await bcrypt.compare(password, userExists.password);
+
+  if (!isMatch) {
+    return res.status(400).json({
       status: 400,
-      message: 'Invalid credentials',
+      message: 'Incorrect password',
     });
   }
+
+  //create token
+  const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, {
+    expiresIn: '24h',
+  });
+
+  return res.status(200).json({
+    status: 200,
+    message: 'User logged in successfully',
+    data: {
+      token,
+      user: {
+        id: userExists.id,
+        name: userExists.name,
+        phone: userExists.phone,
+      },
+    },
+  });
 });
 
-// Generate JWT
-const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.findAll();
+
+  return res.status(200).json({
+    status: 200,
+    message: 'Users retrieved successfully',
+    data: users,
   });
-};
+});
+
+//cleaner to generate token here and return it for reuse in teh response data
 
 module.exports = {
   registerUser,
   loginUser,
+  getAllUsers,
 };
