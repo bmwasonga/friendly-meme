@@ -1,7 +1,6 @@
 {
   "name": "take-home",
   "version": "1.0.0",
-  "main": "server.js",
   "license": "MIT",
   "scripts": {
     "start": "node server/server.js",
@@ -29,6 +28,7 @@
     "sequelize": "^6.17.0"
   },
   "devDependencies": {
+    "faker": "^5.5.3",
     "nodemon": "^2.0.15",
     "sequelize-cli": "^6.4.1"
   }

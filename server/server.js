@@ -1,10 +1,7 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
@@ -41,7 +38,6 @@ app.post(
 );
 
 app.use('/api/users', require('../routes/userRoute'));
-
 
 app.listen(PORT, async () => {
   await sequelize.sync({ force: true });

@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //check to see if user exists
-  const userExists = await User.findOne({ phone });
+  const userExists = await user.findOne({ where: { phone } });
 
   if (userExists) {
     return res.status(400).json({
@@ -35,10 +35,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (newUser) {
     res.status(201).json({
-      id: newUser.UUID,
+      // newUser,
+      uuid: newUser.uuid,
       role: newUser.role,
-      token: generateToken(newUser.UUID, newUser.role),
-
+      token: generateToken(newUser.uuid, newUser.role),
     });
   } else {
     res.status(400);
@@ -57,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   //check to see if user exists
-  const userExists = await user.findOne(phone);
+  const userExists = await user.findOne({ where: { phone } });
 
   if (!userExists) {
     return res.status(400).json({
@@ -66,33 +66,18 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   }
 
-  //check password
-  const isMatch = await bcrypt.compare(password, userExists.password);
-
-  if (!isMatch) {
-    return res.status(400).json({
+  if (userExists && (await bcrypt.compare(password, userExists.password))) {
+    res.status(200).json({
+      uuid: userExists.uuid,
+      role: userExists.role,
+      token: generateToken(userExists.uuid, userExists.role),
+    });
+  } else {
+    res.status(400).json({
       status: 400,
-      message: 'Incorrect password',
+      message: 'Invalid credentials',
     });
   }
-
-  //create token
-  const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, {
-    expiresIn: '24h',
-  });
-
-  return res.status(200).json({
-    status: 200,
-    message: 'User logged in successfully',
-    data: {
-      token,
-      user: {
-        id: userExists.id,
-        role: userExists.role,
-        phone: userExists.phone,
-      },
-    },
-  });
 });
 
 // Generate JWT
