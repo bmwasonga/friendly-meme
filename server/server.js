@@ -15,12 +15,6 @@ const PORT = process.env.PORT || 5000;
 
 const initializePassport = require('../passport.config');
 
-initializePassport(
-  passport,
-  (phone) => user.findOne({ where: { phone } }),
-  (id) => user.findById(id)
-);
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -46,13 +40,10 @@ app.post(
   })
 );
 
-app.use('/user', require('../routes/userRoute'));
+app.use('/api/users', require('../routes/userRoute'));
+
 
 app.listen(PORT, async () => {
-  try {
-    await sequelize.sync({ force: true });
-    console.log('Server is running on port:', PORT, 'and is synced');
-  } catch (error) {
-    console.log(error);
-  }
+  await sequelize.sync({ force: true });
+  console.log('Server is running on port:', PORT, 'and is synced');
 });
