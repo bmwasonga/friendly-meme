@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //check to see if user exists
-  const userExists = await user.findOne({ phone });
+  const userExists = await User.findOne({ phone });
 
   if (userExists) {
     return res.status(400).json({
@@ -38,6 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
       id: newUser.UUID,
       role: newUser.role,
       token: generateToken(newUser.UUID, newUser.role),
+
     });
   } else {
     res.status(400);
