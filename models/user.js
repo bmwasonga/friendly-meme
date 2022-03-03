@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          is: /^\+?[0-9]{10,15}$/,
+          // is: /^\+?[0-9]{10,15}$/,
           notEmpty: { msg: 'Phone number is required' },
           notNull: { msg: 'Phone number is required' },
         },
