@@ -68,38 +68,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
 //login user
 const loginUser = asyncHandler(async (req, res) => {
-  const { phone, password } = req.body;
-
-  if (!phone || !password) {
-    return res.status(500).json({
-      status: 500,
-      message: 'Please provide all required fields',
-    });
-  }
-
-  //check to see if user exists
-  const userExists = await User.findOne({ where: { phone } });
-
-  if (!userExists) {
-    return res.status(500).json({
-      status: 500,
-      message: 'User does not exist',
-    });
-  }
-
-  //check password
-  const isMatch = await bcrypt.compare(password, userExists.password);
-
-  if (!isMatch) {
-    return res.status(400).json({
-      status: 400,
-      message: 'Incorrect password',
-    });
-  }
-
   //create token
   const token = jwt.sign(
-    { id: userExists.id, role: userExists.role },
+    { id: req.user.id, role: req.user.role },
     process.env.JWT_SECRET,
     {
       expiresIn: '24h',
@@ -111,11 +82,6 @@ const loginUser = asyncHandler(async (req, res) => {
     message: 'User logged in successfully',
     data: {
       token,
-      user: {
-        id: userExists.id,
-        name: userExists.name,
-        phone: userExists.phone,
-      },
     },
   });
 });
