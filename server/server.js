@@ -6,6 +6,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 const { sequelize } = require('../models');
 const PORT = process.env.PORT || 5000;
+require('../passport/passport.config');
 
 //include the err middleware
 
@@ -14,14 +15,11 @@ const corsOPtions = {
   credentials: true,
 };
 
-const initializePassport = require('../passport.config');
-
 const app = express();
 app.use(cors(corsOPtions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
-app.set('view engine', 'ejs');
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -29,8 +27,6 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.post(
   'login',
@@ -40,7 +36,7 @@ app.post(
     failureFlash: true,
   })
 );
-
+//route to handle anythign that comes to the user routes
 app.use('/api/users', require('../routes/userRoute'));
 
 app.listen(PORT, async () => {
