@@ -1,7 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class Channel extends Model {
+	class Tasks extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -10,31 +10,40 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			// define association here
 			this.userId = this.belongsTo(models.User, {
-				foreignKey: 'user_id',
+				foreignKey: 'id',
 			});
 		}
 	}
 	Channel.init(
 		{
 			// id: DataTypes.INTEGER,
-			name: DataTypes.STRING,
-			createdAt: {
-				type: DataTypes.DATE,
-				field: 'created_at',
-				allowNull: false,
+			client_name: DataTypes.STRING,
+			client_lastName: DataTypes.STRING,
+			client_phone: DataTypes.STRING,
+			completed: DataTypes.BOOLEAN,
+			task_id: DataTypes.INTEGER,
+			user_id: {
+				type: DataTypes.INTEGER,
+				references: {
+					model: 'User',
+					key: 'id',
+				},
 			},
-			updatedAt: {
-				type: DataTypes.DATE,
-				allowNull: false,
-				field: 'updated_at',
-			},
+			date_assigned: DataTypes.DATE,
+			date_completed: DataTypes.DATE,
+			date_created: DataTypes.DATE,
+			in_progress: DataTypes.BOOLEAN,
+			task_description: DataTypes.STRING,
+			paid: DataTypes.BOOLEAN,
+			comment: DataTypes.STRING,
+			location: DataTypes.STRING,
 		},
 		{
 			sequelize,
-			modelName: 'Channel',
-			tableName: 'channel',
+			modelName: 'Tasks',
+			tableName: 'Tasks',
 			freezeTableName: true,
 		}
 	);
-	return Channel;
+	return Tasks;
 };

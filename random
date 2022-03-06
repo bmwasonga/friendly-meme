@@ -1,91 +1,25 @@
 const faker = require('faker');
-const users = [...Array(100)].map((user) => ({
-  name: faker.name.firstName(),
-  phone: faker.phone.phoneNumber('0701#####'),
-  role: faker.random.arrayElement(['admin', 'user']),
-  password: faker.internet.password(4),
-  createdAt: new Date(),
-  updatedAt: new Date(),
+const users = [...Array(10000)].map((user) => ({
+	client_name: faker.name.firstName(),
+	client_lastName: faker.name.lastName(),
+	client_phone: faker.phone.phoneNumber('07########'),
+	completed: faker.datatype.boolean(),
+	task_id: faker.datatype.number(),
+	user_id: faker.datatype.number({ min: 0, max: 10 }), // limit to a number between 1 and 100
+	date_assigned: faker.date.past(),
+	date_completed: faker.date.past(),
+	date_created: faker.date.past(),
+	in_progress: faker.datatype.boolean(),
+	task_description: faker.lorem.sentence(),
+	paid: faker.datatype.boolean(),
+	comment: faker.lorem.sentence(),
+	location: faker.address.streetAddress(),
 }));
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Users', users, {});
-  },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
-  },
+	up: (queryInterface, Sequelize) => {
+		return queryInterface.bulkInsert('Users', users, {});
+	},
+	down: (queryInterface, Sequelize) => {
+		return queryInterface.bulkDelete('Users', null, {});
+	},
 };
-
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const asyncHandler = require('express-async-handler');
-const { User } = require('../models');
-
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, phone, password, role } = req.body;
-
-  try {
-    const user = await User.create({ name, phone, password, role });
-
-    return res.json(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-});
-
-const loginUser = asyncHandler(async (req, res) => {
-  const { phone, password } = req.body;
-
-  try {
-    const user = await User.findOne({ where: { phone } });
-    // const user = await User.findAll();
-    return res.status(400).json(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-});
-
-// Generate JWT
-// const generateToken = (id, role) => {
-//   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-//     expiresIn: '30d',
-//   });
-// };
-
-module.exports = {
-  registerUser,
-  loginUser,
-};
-
-const localStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
-
-function initialize(passport, getUserByPhone, getUserById) {
-  const authenticateUser = async (phone, password, done) => {
-    const user = getUserByPhone(phone);
-    if (user == null) {
-      return done(null, false, { message: 'No user with that phone number' });
-    }
-    try {
-      if (await bcrypt.compare(password, user.password)) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: 'Password incorrect' });
-      }
-    } catch (e) {
-      return done(e);
-    }
-  };
-
-  passport.use(new localStrategy({ usernameField: 'phone' }, authenticateUser));
-  passport.serializeUser((user, done) => done(null, user.id));
-  passport.deserializeUser((id, done) => {
-    // User.findById(id, (err, user) => done(err, user));
-
-    return done(null, getUserById(id));
-  });
-}
-
-module.exports = initialize;
