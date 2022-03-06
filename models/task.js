@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
+			this.id = this.belongsTo(models.User, {
+				foreignKey: 'id',
+			});
 		}
 	}
 	Task.init(
@@ -16,14 +19,16 @@ module.exports = (sequelize, DataTypes) => {
 			clientName: DataTypes.STRING,
 			clientPhone: DataTypes.STRING,
 			completes: DataTypes.BOOLEAN,
-			userId: DataTypes.STRING,
+			userId: DataTypes.INTEGER,
 			inProgress: DataTypes.BOOLEAN,
 			taskDescription: DataTypes.STRING,
 			comment: DataTypes.STRING,
+			location: DataTypes.STRING,
 		},
 		{
 			sequelize,
 			modelName: 'Task',
+			freezeTableName: true,
 		}
 	);
 	return Task;
