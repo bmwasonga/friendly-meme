@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
+			this.id = this.hasMany(models.Task, {
+				foreignKey: 'user_id',
+			});
 		}
 	}
 	User.init(
