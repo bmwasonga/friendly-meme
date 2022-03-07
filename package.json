@@ -7,7 +7,7 @@
     "server": "nodemon server/server.js",
     "client": "yarn start --prefix client",
     "build": "yarn run server && yarn run client",
-    "migrate": "yarn run build && npx sequelize-cli db:migrate",
+    "migrate": "yarn run build && yarn sequelize-cli db:migrate",
     "down": "npx sequelize-cli db:migrate:undo:all"
   },
   "dependencies": {
