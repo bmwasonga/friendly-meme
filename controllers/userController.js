@@ -101,12 +101,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 		const response = getPagingData(users, page, size);
 		res.send(response);
 	});
-
-	// return res.status(200).json({
-	// 	status: 200,
-	// 	message: 'Users retrieved successfully',
-	// 	data: users,
-	// });
 });
 
 //Mazmatic for pagination

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 			this.id = this.belongsTo(models.User, {
 				foreignKey: 'id',
+				as: 'User',
 			});
 		}
 	}
@@ -28,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: 'Task',
-			freezeTableName: true,
+			// freezeTableName: true,
 		}
 	);
 	return Task;

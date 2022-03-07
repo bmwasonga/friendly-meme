@@ -26,6 +26,10 @@ const Header = () => {
 					<li className='p-6 text-xl'>
 						<Link to='/users'>users</Link>
 					</li>
+
+					{/* <li className='p-6 text-xl'>
+						<Link to='/users'>Tasks</Link>
+					</li> */}
 				</div>
 			) : (
 				<ul className='flex flex-row'>

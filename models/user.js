@@ -9,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			// this.id = this.hasMany(models.Task, {
-			// 	foreignKey: 'id',
-			// });
+			this.id = this.hasMany(models.Task, {
+				foreignKey: 'userId',
+				as: 'Task',
+			});
 		}
 	}
 	User.init(
@@ -32,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: 'User',
+			// freezeTableName: true,
 		}
 	);
 	return User;
