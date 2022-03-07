@@ -82,6 +82,8 @@ const loginUser = asyncHandler(async (req, res) => {
 		message: 'User logged in successfully',
 		data: {
 			token,
+			expiresIn: '24h',
+			reset_password: 0,
 		},
 	});
 });

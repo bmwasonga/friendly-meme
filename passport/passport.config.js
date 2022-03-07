@@ -5,7 +5,7 @@ const { User } = require('../models');
 
 const customFields = {
 	usernameField: 'phone',
-	// if this does not work, add password feild here
+	passwordField: 'password',
 };
 
 const verifyCallback = (phone, password, done) => {
@@ -38,11 +38,11 @@ const strategy = new LocalStrategy(customFields, verifyCallback);
 passport.use(strategy);
 
 passport.serializeUser((user, done) => {
-	done(null, user.id);
+	done(null, user.phone);
 });
 
-passport.deserializeUser((id, done) => {
-	User.findByPk(id)
+passport.deserializeUser((phone, done) => {
+	User.findByPk(phone)
 		.then((user) => {
 			done(null, user);
 		})

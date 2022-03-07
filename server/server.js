@@ -30,21 +30,6 @@ app.use(
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-app.post(
-	'login',
-	passport.authenticate('local', {
-		successRedirect: '/dash',
-		failureRedirect: '/login',
-		failureFlash: true,
-		cookie: {
-			maxAge: 1000 * 60 * 60 * 24 * 7,
-		},
-		store: new SequelizeStore({
-			db: sequelize,
-			table: 'Session',
-		}),
-	})
-);
 //route to handle anythign that comes to the user routes
 app.use('/api/users', require('../routes/userRoute'));
 
