@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const User = require('./user');
 module.exports = (sequelize, DataTypes) => {
 	class Task extends Model {
 		/**
@@ -9,18 +10,24 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			this.id = this.belongsTo(models.User, {
-				foreignKey: 'id',
+			Task.belongsTo(models.User, {
 				as: 'User',
+				foreignKey: 'userId',
+				constraints: false,
 			});
 		}
 	}
 	Task.init(
 		{
+			id: {
+				primaryKey: true,
+				autoIncrement: true,
+				type: DataTypes.INTEGER,
+			},
 			clientName: DataTypes.STRING,
 			clientPhone: DataTypes.STRING,
-			completes: DataTypes.BOOLEAN,
-			userId: DataTypes.INTEGER,
+			completed: DataTypes.BOOLEAN,
+			// userId: DataTypes.INTEGER,
 			inProgress: DataTypes.BOOLEAN,
 			taskDescription: DataTypes.STRING,
 			comment: DataTypes.STRING,
@@ -29,8 +36,10 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: 'Task',
+			tableName: 'Tasks',
 			// freezeTableName: true,
 		}
 	);
+
 	return Task;
 };

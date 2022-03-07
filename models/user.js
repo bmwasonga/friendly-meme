@@ -9,14 +9,16 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			this.id = this.hasMany(models.Task, {
-				foreignKey: 'userId',
-				as: 'Task',
-			});
+			// this.hasMany(models.Task);
 		}
 	}
 	User.init(
 		{
+			id: {
+				primaryKey: true,
+				autoIncrement: true,
+				type: DataTypes.INTEGER,
+			},
 			name: DataTypes.STRING,
 			phone: {
 				type: DataTypes.STRING,

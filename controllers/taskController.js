@@ -20,18 +20,7 @@ const fetchAllTasks = asyncHandler(async (req, res, next) => {
 	// 	res.send(response);
 	// });
 
-	const tasks = await User.findAll({
-		include: [
-			{
-				model: User,
-				as: 'User',
-				attributes: ['id', 'name', 'email', 'phone'],
-			},
-		],
-		where: {
-			userId: 3,
-		},
-	});
+	const tasks = await Task.findAll();
 	res.send(tasks);
 });
 
