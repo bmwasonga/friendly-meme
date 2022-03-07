@@ -87,16 +87,39 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
-	const users = await User.findAll();
+	const { page, size, name } = req.query;
+	var condition = name ? { name: { [User.name]: `%${name}%` } } : null;
+	const { limit, offset } = getPagination(page, size);
 
-	return res.status(200).json({
-		status: 200,
-		message: 'Users retrieved successfully',
-		data: users,
+	const users = await User.findAndCountAll({
+		where: condition,
+		offset,
+		limit,
+	}).then((users) => {
+		const response = getPagingData(users, page, size);
+		res.send(response);
 	});
+
+	// return res.status(200).json({
+	// 	status: 200,
+	// 	message: 'Users retrieved successfully',
+	// 	data: users,
+	// });
 });
 
-//cleaner to generate token here and return it for reuse in teh response data
+//Mazmatic for pagination
+const getPagination = (page, size) => {
+	const limit = size ? +size : 10;
+	const offset = page ? page * limit : 0;
+	return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+	const { count: totalItems, rows: users } = data;
+	const currentPage = page ? +page : 0;
+	const totalPages = Math.ceil(totalItems / limit);
+	return { totalItems, users, totalPages, currentPage };
+};
 
 module.exports = {
 	registerUser,

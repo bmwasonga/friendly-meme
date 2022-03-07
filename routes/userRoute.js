@@ -3,9 +3,9 @@ const router = express.Router();
 const passport = require('passport');
 const { user } = require('../models');
 const {
-  registerUser,
-  loginUser,
-  getAllUsers,
+	registerUser,
+	loginUser,
+	getAllUsers,
 } = require('../controllers/userController');
 const { authenticate } = require('../passport/passport.config');
 const { json } = require('express');
