@@ -94,11 +94,11 @@ const getAllUsers = asyncHandler(async (req, res) => {
 	const { limit, offset } = getPagination(page, size);
 
 	const users = await User.findAndCountAll({
-		where: condition,
+		// where: condition,
 		offset,
 		limit,
 	}).then((users) => {
-		const response = getPagingData(users, page, size);
+		const response = getPagingData(users, page, limit);
 		res.send(response);
 	});
 });
@@ -112,7 +112,7 @@ const getPagination = (page, size) => {
 
 const getPagingData = (data, page, limit) => {
 	const { count: totalItems, rows: users } = data;
-	const currentPage = page ? +page : 0;
+	const currentPage = page ? +page : 1;
 	const totalPages = Math.ceil(totalItems / limit);
 	return { totalItems, users, totalPages, currentPage };
 };

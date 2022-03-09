@@ -1,5 +1,5 @@
 const faker = require('faker');
-const users = [...Array(0)].map((user) => ({
+const users = [...Array(1)].map((user) => ({
 	name: faker.name.firstName(),
 	phone: faker.phone.phoneNumber('0701#####'),
 	role: faker.random.arrayElement(['admin', 'user']),

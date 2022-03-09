@@ -1,17 +1,14 @@
 import axios from 'axios';
+const API_URL = '/api/tasks/';
 
-const API_URL = '/api/users/';
-
-// Get users
+//get all tasks
 const getUsers = async (token) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 	};
-
 	const response = await axios.get(API_URL, config);
-
 	return response.data;
 };
 

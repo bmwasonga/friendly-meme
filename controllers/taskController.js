@@ -5,23 +5,18 @@ const { Task, User } = require('../models');
 //fetch all tasks
 
 const fetchAllTasks = asyncHandler(async (req, res, next) => {
-	// const { page, size, description } = req.query;
-	// var condition = description
-	// 	? { description: { [Task.description]: `%${description}%` } }
-	// 	: null;
-	// const { limit, offset } = getPagination(page, size);
+	const { page, size, title } = req.query;
+	var condition = title ? { title: { [Task]: `%${title}%` } } : null;
+	const { limit, offset } = getPagination(page, size);
 
-	// const users = await Task.findAndCountAll({
-	// 	where: condition,
-	// 	offset,
-	// 	limit,
-	// }).then((tasks) => {
-	// 	const response = getPagingData(tasks, page, size);
-	// 	res.send(response);
-	// });
-
-	const tasks = await Task.findAll();
-	res.send(tasks);
+	const tasks = await Task.findAndCountAll({
+		offset,
+		limit,
+		where: condition,
+	}).then((tasks) => {
+		const response = getPagingData(tasks, page, limit);
+		res.send(response);
+	});
 });
 
 //Mazmatic for pagination
@@ -32,10 +27,10 @@ const getPagination = (page, size) => {
 };
 
 const getPagingData = (data, page, limit) => {
-	const { count: totalItems, rows: users } = data;
-	const currentPage = page ? +page : 0;
+	const { count: totalItems, rows: tasks } = data;
+	const currentPage = page ? +page : 1;
 	const totalPages = Math.ceil(totalItems / limit);
-	return { totalItems, users, totalPages, currentPage };
+	return { totalItems, tasks, totalPages, currentPage };
 };
 
 module.exports = fetchAllTasks;

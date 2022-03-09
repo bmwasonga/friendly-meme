@@ -24,16 +24,10 @@ const logout = async () => {
 	localStorage.removeItem('user');
 };
 
-const getAllUsers = async () => {
-	const response = await axios.get(API_URL);
-	return response.data;
-};
-
 const authService = {
 	register,
 	login,
 	logout,
-	getAllUsers,
 };
 
 export default authService;
