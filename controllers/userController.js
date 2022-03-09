@@ -90,17 +90,22 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const getAllUsers = asyncHandler(async (req, res) => {
 	const { page, size, name } = req.query;
-	var condition = name ? { name: { [User.name]: `%${name}%` } } : null;
 	const { limit, offset } = getPagination(page, size);
 
 	const users = await User.findAndCountAll({
 		// where: condition,
 		offset,
 		limit,
-	}).then((users) => {
-		const response = getPagingData(users, page, limit);
-		res.send(response);
-	});
+	})
+		.then((users) => {
+			const response = getPagingData(users, page, limit);
+			res.send(response);
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message: err.message || 'Some error occurred while retrieving data',
+			});
+		});
 });
 
 //Mazmatic for pagination

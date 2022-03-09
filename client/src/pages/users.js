@@ -8,11 +8,10 @@ function Users() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const { users } = useSelector((state) => state.auth);
-	console.log('users at this time is : ', users);
+	const { user } = useSelector((state) => state.auth);
 
-	const { user, isLoading, isError, message, totalItems } = useSelector(
-		(state) => state.auth
+	const { users, isLoading, isError, message, totalItems } = useSelector(
+		(state) => state.user
 	);
 
 	useEffect(() => {
@@ -20,17 +19,12 @@ function Users() {
 			console.log(message);
 		}
 
-		if (!user) {
-			navigate('/login');
-		}
-
 		dispatch(getAllUsers());
-		console.log(dispatch(getAllUsers()));
 
 		return () => {
 			dispatch(reset());
 		};
-	}, [user, navigate, isError, message, dispatch]);
+	}, [users, navigate, isError, message, dispatch, totalItems]);
 
 	if (isLoading) {
 		return <h1>Loading</h1>;
@@ -44,7 +38,7 @@ function Users() {
 			</section>
 
 			<section className='content'>
-				{totalItems > 0 ? (
+				{users.length > 0 ? (
 					<div className=''>
 						{/* {users.map((user) => (
 							<UserItem key={user.id} users={users} />

@@ -6,17 +6,21 @@ const { Task, User } = require('../models');
 
 const fetchAllTasks = asyncHandler(async (req, res, next) => {
 	const { page, size, title } = req.query;
-	var condition = title ? { title: { [Task]: `%${title}%` } } : null;
 	const { limit, offset } = getPagination(page, size);
 
 	const tasks = await Task.findAndCountAll({
 		offset,
 		limit,
-		where: condition,
-	}).then((tasks) => {
-		const response = getPagingData(tasks, page, limit);
-		res.send(response);
-	});
+	})
+		.then((tasks) => {
+			const response = getPagingData(tasks, page, limit);
+			res.send(response);
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message: err.message || 'Some error occurred while retrieving data',
+			});
+		});
 });
 
 //Mazmatic for pagination
