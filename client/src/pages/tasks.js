@@ -7,10 +7,10 @@ function Tasks() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// const { users } = useSelector((state) => state.auth);
+	const { user } = useSelector((state) => state.auth);
 
-	const { user, task, isLoading, isError, message } = useSelector(
-		(state) => state.auth
+	const { tasks, isLoading, isError, message } = useSelector(
+		(state) => state.task
 	);
 
 	useEffect(() => {
@@ -38,11 +38,12 @@ function Tasks() {
 			<section className='heading'>These are your fetched tasks</section>
 
 			<section className='content'>
-				{user.length > 0 ? (
+				{tasks.tasks.length > 0 ? (
 					<div className=''>
 						{/* {users.map((user) => (
 							<UserItem key={user.id} users={users} />
 						))} */}
+						Ben Wasonga
 					</div>
 				) : (
 					<h3>You do not have any Tasks</h3>

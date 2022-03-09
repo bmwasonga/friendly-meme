@@ -33,7 +33,7 @@ function Users() {
 	return (
 		<>
 			<section className='heading'>
-				<h1>Welcome {user && user?.data.user.name}</h1>
+				{/* <h1>Welcome {user && user?.data.user.name}</h1> */}
 				<p>users Dashboard</p>
 			</section>
 
